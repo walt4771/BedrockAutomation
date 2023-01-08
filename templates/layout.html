@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Main</title>
+  </head>
+  <body>
+    <div class="center">
+      <br>
+      
+      <h1>Backup List<br>
+        
+        <a href="{{url_for('logout')}}" style="font-size: 10px;">로그아웃</a>
+      </h1>
+      
+
+      {% if admin %}
+      <div style="padding: 10px">
+        <br>
+        <a href="{{url_for('restore')}}" >Restore Latest</a>
+        <br>
+        <a href="{{url_for('reset')}}" >Reset Server</a>
+        <br>
+      </div>
+      {% else %}
+      {% endif %}
+      <br>
+      <div class="txt_field">
+        <input type="text" id="memo" required>
+        <span></span>
+        <input type="submit" value="백업" id="input" >
+        </div>
+      <p id="console">메모를 입력하고 백업 버튼을 눌러주세요</p>
+      {% block content %}{% endblock %}
+
+    </div>
+
+  </body>
+  <script>
+    const button  = document.getElementById('input');
+    const info = document.getElementById('console');
+    button.addEventListener("click", function(){
+
+        info.style.color = 'red';
+        info.innerText = '백업이 진행중입니다. 잠시 기다려주세요\n창을 닫으면 백업 중 오류가 발생할 수 있습니다';
+        
+        button.disabled = true;
+        button.style.backgroundColor = 'white';
+
+        const memo = document.getElementById('memo').value;
+        fetch("http://h3bedrock.iptime.org:8000/backup?memo=" + memo ).then(
+            (response) => {
+                if(response.status == 200){
+                    alert('백업이 완료되었습니다');
+                    window.location.reload();
+                }else{
+                    alert('백업 실패, 서버에 플레이어가 있거나 일시적인 오류입니다');
+                    window.location.reload();
+                }
+            }
+        );
+    })
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@700&family=Poppins:wght@400;500;600&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body{
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(120deg,#2980b9, #8e44ad);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+}
+.center h1{
+  text-align: center;
+  padding: 20px 0;
+  border-bottom: 1px solid silver;
+}
+.center form{
+  border-top: 1px solid silver;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+form .txt_field{
+  position: relative;
+  margin: 30px 0;
+}
+.txt_field input{
+  width: 70%;
+  padding: 0 5px;
+  margin: 0px 5px 0px 10px;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  background: none;
+  outline: none;
+
+  border-bottom: 2px solid #adadad;
+}
+
+#console{
+  margin: 10px 0 10px 10px;
+  color: #a6a6a6;
+  cursor: pointer;
+}
+
+input[type="submit"]{
+  position: absolute;
+
+  width: 20%;
+  height: 40px;
+  border: 1px solid;
+  background: #2691d9;
+  border-radius: 25px;
+  font-size: 15px;
+  color: #e9f4fb;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+}
+
+#item {
+  display: flex;
+  border-top: 1px solid silver;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.item_subtitle{
+  margin: -5px 0 20px 5px;
+  color: #a6a6a6;
+}
+  </style>
+</html>
